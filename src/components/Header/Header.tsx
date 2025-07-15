@@ -55,7 +55,7 @@ export function StickyNavbar() {
         </div> : <div>
           <div className="flex">
             <MenuItem href="/" title="Painel" />
-            <MenuItem href="/pacientes/formulario/cadastro" title="Novo Paciente" />
+            <MenuItem href="/pacientes/formulario/cadastro" title="Novo Motorista" />
             <MenuItem href="/reports" title="Relatórios" />
           </div>
         </div>}

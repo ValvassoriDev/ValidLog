@@ -53,23 +53,18 @@ model Hospital {
 
 model Paciente {
   id               String           @id @default(uuid())
-  registroPaciente String
   nomeCompleto     String
-  abreviacaoNome   String
-  sexo             Sexo
-  hospitalId       String
+  cpf              String
+  cnh              String
+  endereco         String
+  Cep              String
+  placa            String
+  veiculo              String
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
-  roomNumber       String
   insertedBy       String?
   status           Status           @default(Internado)
-  cateteres        Cateter[]
-  danulas          Danula[]
-  equipos          Equipo[]
-  evolucoes        Evolucao[]
-  medicacoesRisco  MedicacaoRisco[]
   hospital         Hospital         @relation(fields: [hospitalId], references: [id])
-  peliculas        Pelicula[]
   Log              Log[]
 
   @@map("pacientes")

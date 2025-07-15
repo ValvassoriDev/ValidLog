@@ -26,21 +26,6 @@ export default function PacientesList() {
     }
   };
 
-  const getStatusStyle = (status: Status) => {
-    switch (status) {
-      case "Alta":
-        return "bg-green-100 text-green-800";
-      case "Internado":
-        return "bg-yellow-100 text-yellow-800";
-      case "Transferido":
-        return "bg-orange-100 text-orange-800";
-      case "Obito":
-        return "bg-gray-300 text-gray-800 line-through";
-      default:
-        return "bg-neutral-100 text-neutral-800";
-    }
-  };
-
   return (
     <AuthGuard allowedRoles={BASE_ROUTES_ROLES.pacientes}>
       <div className="bg-background min-h-screen py-8">
@@ -48,7 +33,6 @@ export default function PacientesList() {
           title="Pacientes Cadastrados"
           records={patients || []}
           columns={[
-            { title: "Registro", field: "registroPaciente" },
             { title: "Nome Completo", field: "nomeCompleto" },
             { title: "Nome Abreviado", field: "abreviacaoNome" },
             {
@@ -67,7 +51,7 @@ export default function PacientesList() {
             },
           ]}
           newRecordUrl="/pacientes/formulario/cadastro"
-          newRecordButtonText="Novo Paciente"
+          newRecordButtonText="Novo Motorista"
           onDetails={(id) => router.push(`/pacientes/visualizar/${id}`)}
           loading={loading}
           error={error}

@@ -13,12 +13,12 @@ export default function CadastrarPacientePagina() {
     <AuthGuard allowedRoles={BASE_ROUTES_ROLES.pacientes}>
       <div className="bg-background min-h-screen py-8">
         <FormBase
-          title="Cadastro de Paciente"
+          title="Cadastro de Motorista"
           //@ts-ignore
           fields={PACIENTE_FIELDS}
           //@ts-ignore
           onSubmit={handleSubmit}
-          buttonText="Cadastrar Paciente"
+          buttonText="Cadastrar Motorista"
           error={submitError || undefined}
           onSuccess={() => {
             setTimeout(() => router.push("/"));

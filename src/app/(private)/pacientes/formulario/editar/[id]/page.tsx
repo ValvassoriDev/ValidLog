@@ -1,7 +1,6 @@
 "use client";
 
 import { useShowPacienteId } from "@/hooks/useShowPacienteId";
-import { Sexo, Status } from "@prisma/client";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormBase } from "@/components/formBase";
@@ -41,47 +40,33 @@ export default function EditarPacientePagina() {
   };
 
   const campos = [
-    {
-      id: "registroPaciente",
-      label: "Registro do Paciente",
-      required: true,
-      type: "text",
-      readonly: true
-    },
-    {
+      {
       id: "nomeCompleto",
       label: "Nome Completo",
       required: true,
       type: "text",
     },
     {
-      id: "abreviacaoNome",
-      label: "Nome Abreviado",
+      id: "placa",
+      label: "Placa",
       required: false,
       type: "text",
     },
 
     {
-      id: "sexo",
-      label: "Sexo",
+      id: "veiculo",
+      label: "Veiculo",
       required: true,
       type: "select",
       options: [
-        { value: Sexo.M, label: "Masculino" },
-        { value: Sexo.F, label: "Feminino" },
+        { value: "truck", label: "Truck" },
+        { value: "3/4", label: "3/4" },
+        { value: "toco", label: "Toco" },
+        { value: "van", label: "VAN" },
       ],
     },
 
-    {
-      id: "status",
-      label: "Status",
-      type: "select",
-      required: true,
-      options: Object.keys(Status).map((key) => ({
-        value: Status[key as keyof typeof Status],
-        label: key.replace("_", " "),
-      })),
-    },
+
   ];
 
   if (loading) {

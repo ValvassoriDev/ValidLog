@@ -3,7 +3,7 @@
 :root {
   --background: #ffffff;
   --foreground: #000000;
-  --primary: green;
+  --primary: rgb(6, 7, 4);
   --primary-foreground: #ffffff;
   --card: #ffffff;
   --card-foreground: #333333;
