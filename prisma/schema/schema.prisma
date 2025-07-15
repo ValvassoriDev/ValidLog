@@ -1,0 +1,313 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id           String      @id @default(uuid())
+  matricula    String      @unique
+  nomeCompleto String
+  senha        String
+  nivelAcesso  NivelAcesso
+  hospitalId   String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  email        String?
+  phone        String?
+  status       UserStatus  @default(Ativo)
+  hospital     Hospital?   @relation(fields: [hospitalId], references: [id])
+  Log          Log[]
+
+  @@map("usuarios")
+}
+
+model Hospital {
+  id              String           @id @default(uuid())
+  nome            String
+  endereco        String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  city            String?
+  cnpj            String?
+  email           String?
+  phone           String?
+  state           String?
+  status          HospitalStatus   @default(Ativo)
+  zipCode         String?
+  cateteres       Cateter[]
+  danulas         Danula[]
+  equipos         Equipo[]
+  evolucoes       Evolucao[]
+  medicacoesRisco MedicacaoRisco[]
+  pacientes       Paciente[]
+  peliculas       Pelicula[]
+  usuarios        Usuario[]
+  Log             Log[]
+
+  @@map("hospitais")
+}
+
+model Paciente {
+  id               String           @id @default(uuid())
+  registroPaciente String
+  nomeCompleto     String
+  abreviacaoNome   String
+  sexo             Sexo
+  hospitalId       String
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+  roomNumber       String
+  insertedBy       String?
+  status           Status           @default(Internado)
+  cateteres        Cateter[]
+  danulas          Danula[]
+  equipos          Equipo[]
+  evolucoes        Evolucao[]
+  medicacoesRisco  MedicacaoRisco[]
+  hospital         Hospital         @relation(fields: [hospitalId], references: [id])
+  peliculas        Pelicula[]
+  Log              Log[]
+
+  @@map("pacientes")
+}
+
+model Cateter {
+  id                  String              @id @default(uuid())
+  registroPaciente    String
+  tipoCateter         TipoCateter
+  identificacaoStatus IdentificacaoStatus
+  condicao            CondicaoCateter
+  turno               Turno
+  situacao            Situacao            @default(Manter)
+  dataInsercao        DateTime            @default(now())
+  hospitalId          String
+  pacienteId          String
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  expireIn            DateTime
+  insertedBy          String?
+  hospital            Hospital            @relation(fields: [hospitalId], references: [id])
+  paciente            Paciente            @relation(fields: [pacienteId], references: [id])
+
+  @@map("cateteres")
+}
+
+model Pelicula {
+  id               String         @id @default(uuid())
+  registroPaciente String
+  modeloPelicula   ModeloPelicula
+  turno            Turno
+  situacao         Situacao       @default(Manter)
+  dataInsercao     DateTime       @default(now())
+  hospitalId       String
+  pacienteId       String
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  expireIn         DateTime
+  insertedBy       String?
+  hospital         Hospital       @relation(fields: [hospitalId], references: [id])
+  paciente         Paciente       @relation(fields: [pacienteId], references: [id])
+
+  @@map("peliculas")
+}
+
+model Danula {
+  id               String   @id @default(uuid())
+  registroPaciente String
+  turno            Turno
+  situacao         Situacao @default(Manter)
+  dataInsercao     DateTime @default(now())
+  hospitalId       String
+  pacienteId       String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  expireIn         DateTime
+  insertedBy       String?
+  hospital         Hospital @relation(fields: [hospitalId], references: [id])
+  paciente         Paciente @relation(fields: [pacienteId], references: [id])
+
+  @@map("danulas")
+}
+
+model Equipo {
+  id               String     @id @default(uuid())
+  registroPaciente String
+  tipo             TipoEquipo
+  turno            Turno
+  situacao         Situacao   @default(Manter)
+  dataInsercao     DateTime   @default(now())
+  hospitalId       String
+  pacienteId       String
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+  expireIn         DateTime
+  insertedBy       String?
+  hospital         Hospital   @relation(fields: [hospitalId], references: [id])
+  paciente         Paciente   @relation(fields: [pacienteId], references: [id])
+
+  @@map("equipos")
+}
+
+model MedicacaoRisco {
+  id               String   @id @default(uuid())
+  registroPaciente String
+  medicacao        String
+  duracaoHoras     Int
+  dataInsercao     DateTime @default(now())
+  turno            Turno
+  situacao         Situacao @default(Manter)
+  hospitalId       String
+  pacienteId       String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  expireIn         DateTime
+  insertedBy       String?
+  hospital         Hospital @relation(fields: [hospitalId], references: [id])
+  paciente         Paciente @relation(fields: [pacienteId], references: [id])
+
+  @@map("medicacoes_risco")
+}
+
+model Evolucao {
+  id               String   @id @default(uuid())
+  registroPaciente String
+  anotacao         String
+  profissional     String
+  turno            Turno
+  dataEvolucao     DateTime @default(now())
+  hospitalId       String
+  pacienteId       String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  insertedBy       String?
+  hospital         Hospital @relation(fields: [hospitalId], references: [id])
+  paciente         Paciente @relation(fields: [pacienteId], references: [id])
+
+  @@map("evolucoes")
+}
+
+model Log {
+  id          String   @id @default(uuid())
+  date        DateTime @default(now())
+  hospitalId  String
+  patiendId   String
+  userId      String
+  table       Tables   @default(Usuario)
+  method      Method
+  valueBefore Json
+  valueAfter  Json
+  hospital    Hospital @relation(fields: [hospitalId], references: [id])
+  patient     Paciente @relation(fields: [patiendId], references: [id])
+  user        Usuario  @relation(fields: [userId], references: [id])
+
+  @@map("logs")
+}
+
+enum Method {
+  CREATE
+  UPDATE
+  DELETE
+}
+
+enum Tables {
+  Cateter
+  Paciente
+  Pelicula
+  Equipo
+  Danula
+  Usuario
+  Hospital
+}
+
+enum NivelAcesso {
+  COORDENADOR_ENFERMAGEM
+  SUPERVISOR_ENFERMAGEM
+  ENFERMEIRO
+  TECNICO
+  TI
+}
+
+enum TipoSanguineo {
+  A_Pos
+  A_Neg
+  B_Pos
+  B_Neg
+  AB_Pos
+  AB_Neg
+  O_Pos
+  O_Neg
+}
+
+enum Sexo {
+  M
+  F
+}
+
+enum Status {
+  Alta
+  Internado
+  Transferido
+  Obito
+}
+
+enum TipoCateter {
+  Periferico
+  Central
+  PICC
+  Portocath
+  Periferico_Longo
+  Sem_Acesso
+  Emergencia
+  PowerPICC
+}
+
+enum IdentificacaoStatus {
+  Identificada_via_Central
+  Identificado
+  Nao_Identificado
+}
+
+enum CondicaoCateter {
+  Em_Ordem
+  Padronizar
+  Atencao
+}
+
+enum TipoEquipo {
+  Simples
+  Bomba
+}
+
+enum Turno {
+  MANHA
+  TARDE
+  NOITE
+  MADRUGADA
+}
+
+enum Situacao {
+  Manter
+  Atencao
+  Vencido
+  Removido
+}
+
+enum ModeloPelicula {
+  Recem_Aplicada
+  Pelicula_com_Gaze
+  Pelicula_Fixa
+}
+
+enum UserStatus {
+  Ativo
+  Bloqueado
+}
+
+enum HospitalStatus {
+  Ativo
+  Bloqueado
+}
